@@ -1,0 +1,196 @@
+documentacion 
+
+instalacion de pandas, numpy, seaborn
+
+
+
+El error ModuleNotFoundError: No module named 'pandas' significa que no tienes la librería pandas instalada en tu entorno de Python. Para resolverlo, sigue estos pasos:
+
+1. Instalar pandas
+a. Abrir la terminal en VS Code
+Si no tienes la terminal abierta, puedes abrirla usando el atajo Ctrl+ñ o desde el menú superior selecciona Terminal > New Terminal.
+b. Instalar pandas usando pip
+Una vez en la terminal, escribe el siguiente comando para instalar pandas:
+
+bash
+Copy code
+pip install pandas
+Esto descargará e instalará pandas y todas sus dependencias.
+
+2. Instalar numpy y matplotlib (opcional)
+Si también necesitas numpy y matplotlib, puedes instalarlas con los siguientes comandos:
+
+bash
+Copy code
+pip install numpy
+pip install matplotlib
+3. Verificar la instalación
+Una vez que las instalaciones estén completas, vuelve a tu notebook y ejecuta de nuevo la celda con el código import pandas as pd. Ahora debería funcionar sin problemas.
+
+Si encuentras más problemas, me avisas y te ayudaré a solucionarlos.
+
+
+El error ModuleNotFoundError: No module named 'seaborn' ocurre porque la librería seaborn no está instalada en tu entorno de Python. Para solucionarlo, puedes seguir los siguientes pasos:
+
+1. Instalar seaborn
+a. Abrir la terminal en VS Code
+Si ya tienes la terminal abierta, puedes utilizarla, o abre una nueva terminal con Ctrl+ñ o desde el menú Terminal > New Terminal.
+b. Instalar seaborn usando pip
+En la terminal, escribe el siguiente comando para instalar seaborn:
+
+bash
+Copy code
+pip install seaborn
+2. Verificar la instalación
+Después de que seaborn se haya instalado, vuelve a tu notebook y ejecuta nuevamente la celda con el código import seaborn as sns. Esta vez, no debería aparecer el error.
+
+
+
+¡Vamos a abordar el primer avance del proyecto paso a paso! Aquí te explico cómo podrías proceder con cada una de las consignas:
+
+### 1. Leer el archivo Readme.txt
+
+Primero, abre el archivo `Readme.txt` para familiarizarte con las columnas y datos que se usarán. Esto te dará un entendimiento de la estructura y el contenido del dataset.
+
+### 2. Crear un nuevo notebook
+
+Abre Visual Studio Code y crea un nuevo notebook llamado `PIDA_M4_Nombre_Apellido.ipynb`. Asegúrate de reemplazar "Nombre" y "Apellido" con tus datos reales.
+
+```python
+# Importar librerías necesarias
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+### 3. Leer el archivo CSV
+
+Carga el archivo `data_latinoamerica.csv` en tu notebook.
+
+```python
+# Leer el archivo CSV
+df = pd.read_csv('data_latinoamerica.csv')
+```
+
+### 4. Verificar la carga del dataset
+
+Comprueba que el dataset tiene la cantidad correcta de registros y columnas.
+
+```python
+# Verificar las dimensiones del dataset
+print(f"Registros: {df.shape[0]}")
+print(f"Columnas: {df.shape[1]}")
+```
+
+### 5. Seleccionar los países de interés
+
+Filtra los datos para incluir solo los países especificados.
+
+```python
+# Filtrar los datos por países
+paises = ['Colombia', 'Argentina', 'Chile', 'México', 'Perú', 'Brasil']
+df_filtrado = df[df['pais'].isin(paises)]
+```
+
+### 6. Filtrar por fechas
+
+Filtra los datos para incluir solo fechas mayores a 2021-01-01.
+
+```python
+# Asegúrate de que la columna de fecha esté en formato datetime
+df_filtrado['fecha'] = pd.to_datetime(df_filtrado['fecha'])
+
+# Filtrar por fechas
+df_filtrado = df_filtrado[df_filtrado['fecha'] > '2021-01-01']
+```
+
+### 7. Comparar y llenar valores faltantes
+
+Analiza los valores faltantes y decide cómo llenarlos. Puedes usar la mediana, valores anteriores o siguientes según sea apropiado.
+
+```python
+# Verificar valores faltantes
+print(df_filtrado.isnull().sum())
+
+# Llenar valores faltantes, por ejemplo con la mediana
+df_filtrado.fillna(df_filtrado.median(), inplace=True)
+```
+
+### 8. Limpieza preliminar de datos
+
+Elimina registros nulos y corrige tipos de datos donde sea necesario.
+
+```python
+# Eliminar registros con valores nulos
+df_filtrado.dropna(inplace=True)
+
+# Convertir columnas a tipos de datos apropiados si es necesario
+df_filtrado['columna_ejemplo'] = df_filtrado['columna_ejemplo'].astype(int)
+```
+
+### 9. Examinar características básicas del dataset
+
+Usa métodos de pandas para examinar las características básicas del dataset.
+
+```python
+# Descripción básica del dataset
+print(df_filtrado.describe())
+
+# Información sobre las columnas
+print(df_filtrado.info())
+```
+
+### 10. Guardar los datos filtrados
+
+Guarda los datos filtrados en un nuevo archivo CSV.
+
+```python
+# Guardar los datos filtrados
+df_filtrado.to_csv('DatosFinalesFiltrado.csv', index=False)
+```
+
+### 11. Cálculo de estadísticas descriptivas
+
+Aplica bucles para calcular estadísticas descriptivas y reflexiona sobre su implicancia.
+
+```python
+# Calcular estadísticas descriptivas usando bucles
+for columna in df_filtrado.select_dtypes(include=[np.number]).columns:
+    print(f"Estadísticas para {columna}:")
+    print(df_filtrado[columna].describe())
+    print("\n")
+```
+
+#### Reflexiones:
+- Las métricas como la media, desviación estándar, mínimo y máximo te proporcionan una idea general de la distribución de los datos.
+- No todas las columnas numéricas pueden mostrar todas las estadísticas si contienen valores no numéricos o nulos.
+
+### 12. Crear una función para mediana, varianza y rango
+
+Define una función para calcular estas métricas y reflexiona sobre su significado.
+
+```python
+def calcular_estadisticas(df, columna):
+    mediana = df[columna].median()
+    varianza = df[columna].var()
+    rango = df[columna].max() - df[columna].min()
+    
+    return mediana, varianza, rango
+
+# Ejemplo de uso
+mediana, varianza, rango = calcular_estadisticas(df_filtrado, 'incidencia_covid')
+print(f"Mediana: {mediana}")
+print(f"Varianza: {varianza}")
+print(f"Rango: {rango}")
+```
+
+#### Reflexiones:
+- La **mediana** representa el valor central de los datos, separando la mitad superior e inferior.
+- La **varianza** mide la dispersión de los datos respecto a la media.
+- El **rango** indica la diferencia entre el valor máximo y el mínimo, proporcionando una visión de la variabilidad de los datos.
+
+No olvides comentar tu código para mantener la claridad y el orden. ¡Buena suerte con tu proyecto! Si necesitas más ayuda, no dudes en preguntar.
+
+
+
